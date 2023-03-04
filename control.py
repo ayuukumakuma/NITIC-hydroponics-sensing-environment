@@ -7,19 +7,16 @@ def control(data, db):
     def on_snapshot(snapshot, changes, read_time):
         for doc in snapshot:
             env = {doc.id: doc.to_dict()}
+            print('----------------------------------')
             gpio(env, data)
 
     ref = db.collection(u'control')
     watch = ref.on_snapshot(on_snapshot)
-    while True:
-        time.sleep(300)
-        GPIO.cleanup()
+    time.sleep(240)
 
 # 5分毎に監視，on,offを切り替える
 def gpio(env, data):
-
     set_gpio()
-    print('-------------------')
     pin = {'heater': 13, 'light': 6, 'fertilizer':5, 'fan': 0}
     # fan
     if 'fan' in env:
@@ -35,7 +32,7 @@ def gpio(env, data):
         if data['ec'] <= env['fertilizer']['min_ec']:
             print('fertilizer: on')
             GPIO.output(pin['fertilizer'], 1)
-            time.sleep(10)
+            time.sleep(5)
             GPIO.output(pin['fertilizer'], 0)
         else:
             print('fertilizer: off')
@@ -57,10 +54,10 @@ def gpio(env, data):
         start_time = [int(n) for n in env['light']['start_time'].split(':')]
         end_time = [int(n) for n in env['light']['end_time'].split(':')]
 
-        if hour == end_time[0] and minute >= end_time[1]:
+        if (hour == end_time[0] and minute >= end_time[1]) or hour > end_time[0]:
             print('light: off')
             GPIO.output(pin['light'], 0)
-        elif hour == start_time[0] and minute >= start_time[1]:
+        elif (hour == start_time[0] and minute >= start_time[1]) or hour > start_time[0]:
             print('light: on')
             GPIO.output(pin['light'], 1)
 

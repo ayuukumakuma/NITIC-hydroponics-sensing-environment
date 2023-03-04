@@ -8,4 +8,4 @@ if __name__ == "__main__":
   data = sensing_data()
   push(data, db)
   print(data)
-  # control(data, db)
+  control(data, db)

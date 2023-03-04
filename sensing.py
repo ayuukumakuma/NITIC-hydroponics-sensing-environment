@@ -40,10 +40,10 @@ def sensing_data():
     ec_water_temperature_result = ec_water_temperature()
     temprature_humidity_result = temprature_humidity()
     result = {
-        'ec': ec_water_temperature_result[0],
-        'water_temperature': ec_water_temperature_result[1],
-        'co2': co2(),
-        'temperature': temprature_humidity_result[0],
-        'humidity': temprature_humidity_result[1]
+        'ec': round(ec_water_temperature_result[0], 2),
+        'water_temperature': round(ec_water_temperature_result[1], 2),
+        'co2': round(co2(), 2),
+        'temperature': round(temprature_humidity_result[0], 2),
+        'humidity': round(temprature_humidity_result[1], 2)
     }
     return result
